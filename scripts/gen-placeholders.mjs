@@ -2,7 +2,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 
 const projects = [
-  ['itadaki', 350, 20], ['foodrng', 25, 50], ['spike-agent', 190, 270], ['daki-life', 260, 320], ['food-ninja', 120, 150],
+  ['itadaki', 350, 20], ['foodrng', 25, 50], ['daki-life', 260, 320], ['food-ninja', 120, 150],
 ];
 const dir = 'public/assets/projects';
 mkdirSync(dir, { recursive: true });

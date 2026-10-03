@@ -170,7 +170,7 @@ export const projects: Project[] = [
     tagline: 'Automated Spike Sorting and Unit Quality Scoring for Neural Recordings',
     category: 'Neurotech / ML',
     tags: ['AI', 'Research'],
-    thumbnailUrl: thumb('spike-agent'),
+    thumbnailUrl: thumb('spike-agent', 'jpg'),
     galleryImages: [],
     summary:
       'At Elastro, a Harvard-affiliated neurotech startup, raw recordings have to be sorted into individual neurons before they\'re useful.',
