@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { matchesFilter, projects } from '@/data/projects';
-import { sfx } from '@/hooks/useSound';
+import { sfx } from '@/hooks/useAudio';
 import { useStore } from '@/store/useStore';
 
 /** Filterable 2D card grid: the mobile Work view and the /projects catalog. */

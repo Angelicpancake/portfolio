@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import type { Project } from '@/data/projects';
-import { sfx } from '@/hooks/useSound';
+import { sfx } from '@/hooks/useAudio';
+import AutoplayVideo from '@/components/ui/AutoplayVideo';
 import Lightbox from './Lightbox';
 import SectionRenderer from './SectionRenderer';
-import VideoHero from './VideoHero';
 import YouTubeEmbed from './YouTubeEmbed';
 
 interface Props {
@@ -60,10 +60,10 @@ export default function ProjectDetail({ project, prev, next }: Props) {
       </header>
 
       <div className="mt-10">
-        {project.youtube ? (
+        {project.videoUrl ? (
+          <AutoplayVideo src={project.videoUrl} poster={project.thumbnailUrl} title={project.title} />
+        ) : project.youtube ? (
           <YouTubeEmbed id={project.youtube.id} title={project.title} short={project.youtube.short} />
-        ) : project.videoUrl ? (
-          <VideoHero src={project.videoUrl} poster={project.thumbnailUrl} title={project.title} />
         ) : (
           <img src={project.thumbnailUrl} alt={project.title} className="aspect-video w-full rounded-2xl object-cover" />
         )}

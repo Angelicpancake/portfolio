@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { SlidersHorizontal } from 'lucide-react';
-import { sfx } from '@/hooks/useSound';
+import { sfx } from '@/hooks/useAudio';
 import { useStore } from '@/store/useStore';
 
 const TABS = [

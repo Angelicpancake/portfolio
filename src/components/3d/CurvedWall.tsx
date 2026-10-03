@@ -6,7 +6,7 @@ import gsap from 'gsap';
 import { PerspectiveCamera, Vector3, type Group, type Mesh } from 'three';
 import { matchesFilter, projects, type Project } from '@/data/projects';
 import { use3DInteraction } from '@/hooks/use3DInteraction';
-import { sfx } from '@/hooks/useSound';
+import { duck, sfx } from '@/hooks/useAudio';
 import { useStore } from '@/store/useStore';
 import { ProjectCard3D, TILE_H } from './ProjectCard3D';
 
@@ -67,8 +67,8 @@ export function CurvedWall({ active }: { active: boolean }) {
       store.setTransitioning(true);
       store.setActiveSlug(project.slug);
       store.setHoverSlug(null);
-      sfx.click();
-      sfx.transition();
+      sfx.enter();
+      duck(0.25);
 
       const target = mesh.getWorldPosition(new Vector3());
       const end = target.clone().sub(target.clone().normalize().multiplyScalar(3.6));

@@ -19,6 +19,7 @@ You are updating the project data for this Next.js portfolio. Source material: `
    - `links`: GitHub / demo / website URLs. `youtube`: `{ id, short? }` from watch/shorts URLs.
    - `tags` and `category`: only what the source implies; reuse existing tags where possible (`src/data/projects.ts` → `allTags`).
 3. Add a thumbnail: add the slug to `scripts/gen-placeholders.mjs` and run `node scripts/gen-placeholders.mjs`, or put a real image at `public/assets/projects/<slug>.<ext>` and point `thumbnailUrl` at it.
+3b. Video (optional): put an `.mp4` at `public/assets/projects/<slug>.mp4` and set `videoUrl: '/assets/projects/<slug>.mp4'`. It then autoplays (muted, looped) on the 3D wall tile and the detail page; the YouTube embed is only used when there is no `videoUrl`.
 4. Run `npm run type-check && npm run lint && npm run build`.
 
 **Rules**

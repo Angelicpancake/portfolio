@@ -1,20 +1,12 @@
 'use client';
 import Link from 'next/link';
 import { useTimezones } from '@/hooks/useTimezones';
-import { setAmbient, sfx } from '@/hooks/useSound';
-import { useStore } from '@/store/useStore';
+import { sfx, toggleMute } from '@/hooks/useAudio';
+import { useAudioStore } from '@/store/useAudioStore';
 
 export default function Header() {
   const clocks = useTimezones();
-  const soundOn = useStore((s) => s.soundOn);
-  const toggleSound = useStore((s) => s.toggleSound);
-
-  const onToggle = () => {
-    const next = !soundOn;
-    toggleSound();
-    setAmbient(next); // inside the click so the AudioContext may start
-    if (next) sfx.click();
-  };
+  const soundOn = !useAudioStore((s) => s.isMuted);
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 flex items-start justify-between gap-4 px-4 py-4 md:px-8 md:py-6">
@@ -32,7 +24,7 @@ export default function Header() {
       </div>
 
       <div className="flex items-center gap-3 md:gap-5">
-        <button type="button" onClick={onToggle} className="micro text-paper transition-opacity hover:opacity-70" aria-pressed={soundOn}>
+        <button type="button" onClick={toggleMute} className="micro text-paper transition-opacity hover:opacity-70" aria-pressed={soundOn}>
           [SOUND {soundOn ? 'ON' : 'OFF'}]
         </button>
         <a

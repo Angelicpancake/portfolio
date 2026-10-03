@@ -19,3 +19,7 @@ npm run lint && npm run type-check
 - Desktop: WebGL curved wall — drag / wheel / touch with inertia, cursor tilt, click a tile to zoom into `/projects/[slug]`.
 - Phones (<768px): the 3D canvas is skipped in favour of a 2D smooth-scroll grid.
 - Sound (Web Audio) is off by default; toggle with `[SOUND ON/OFF]` in the header.
+
+## Audio & video
+- Audio is muted until `[SOUND ON]`. Sounds are synthesized by default (hover tick, click, enter/back whoosh, ambient pad, ambient ducks inside projects). To use your own, add `swoosh-in.mp3`, `swoosh-out.mp3`, `ambient.mp3`, `hover.mp3`, `click.mp3` to `public/audio/`; they're picked up automatically.
+- Video: set a project's `videoUrl` to an `.mp4` in `public/assets/projects/` to autoplay it on the wall tile and project page.

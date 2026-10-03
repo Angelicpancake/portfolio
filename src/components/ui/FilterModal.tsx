@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { allTags, matchesFilter, projects } from '@/data/projects';
-import { sfx } from '@/hooks/useSound';
+import { sfx } from '@/hooks/useAudio';
 import { useStore } from '@/store/useStore';
 
 export default function FilterModal() {

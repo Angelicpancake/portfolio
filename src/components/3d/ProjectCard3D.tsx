@@ -1,11 +1,12 @@
 'use client';
-import { useMemo, useRef } from 'react';
+import { Suspense, useMemo, useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
-import { PlaneGeometry, ShaderMaterial, SRGBColorSpace, Vector2, type Group, type Mesh } from 'three';
+import { PlaneGeometry, ShaderMaterial, SRGBColorSpace, Vector3, type Group, type Mesh } from 'three';
 import type { Project } from '@/data/projects';
-import { sfx } from '@/hooks/useSound';
+import { sfx } from '@/hooks/useAudio';
 import { useStore } from '@/store/useStore';
+import ProjectVideoMesh, { coverScale } from './ProjectVideoMesh';
 
 export const TILE_W = 3.6;
 export const TILE_H = 4.5;
@@ -55,6 +56,10 @@ export function ProjectCard3D({ project, angle, y, radius, visible, delay, onSel
   const hover = useRef(0);
   const hovered = useRef(false);
   const appear = useRef(0);
+  const [live, setLive] = useState(false);
+  const liveRef = useRef(false);
+  const tmpPos = useMemo(() => new Vector3(), []);
+  const tmpDir = useMemo(() => new Vector3(), []);
 
   // plane bent onto the cylinder so edges curve toward the viewer at the centre
   const geometry = useMemo(() => {
@@ -71,9 +76,7 @@ export function ProjectCard3D({ project, angle, y, radius, visible, delay, onSel
 
   const material = useMemo(() => {
     const img = texture.image as { width: number; height: number } | undefined;
-    const texAspect = img ? img.width / img.height : 1;
-    const planeAspect = TILE_W / TILE_H;
-    const scale = planeAspect > texAspect ? new Vector2(1, texAspect / planeAspect) : new Vector2(planeAspect / texAspect, 1);
+    const scale = coverScale(img?.width ?? 1, img?.height ?? 1, TILE_W / TILE_H);
     return new ShaderMaterial({
       vertexShader,
       fragmentShader,
@@ -85,6 +88,16 @@ export function ProjectCard3D({ project, angle, y, radius, visible, delay, onSel
   useFrame((state, delta) => {
     const g = scaleGroup.current;
     if (!g) return;
+    // only decode video for the hovered tile or tiles facing the camera (keeps concurrent videos low)
+    if (project.videoUrl && mesh.current) {
+      mesh.current.getWorldPosition(tmpPos).normalize();
+      const facing = tmpPos.dot(state.camera.getWorldDirection(tmpDir)) > 0.9;
+      const want = visible && (facing || hovered.current);
+      if (want !== liveRef.current) {
+        liveRef.current = want;
+        setLive(want);
+      }
+    }
     if (state.clock.elapsedTime > delay) appear.current = Math.min(1, appear.current + delta * 1.6);
     const target = visible ? 1 : 0;
     const hoverTarget = hovered.current && visible ? 1 : 0;
@@ -125,6 +138,11 @@ export function ProjectCard3D({ project, angle, y, radius, visible, delay, onSel
             onSelect(project, mesh.current);
           }}
         />
+        {live && project.videoUrl && (
+          <Suspense fallback={null}>
+            <ProjectVideoMesh url={project.videoUrl} material={material} fallback={texture} planeAspect={TILE_W / TILE_H} />
+          </Suspense>
+        )}
       </group>
     </group>
   );
