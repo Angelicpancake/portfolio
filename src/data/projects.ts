@@ -240,7 +240,6 @@ export const projects: Project[] = [
     thumbnailUrl: thumb('daki-life', 'jpg'),
     videoUrl: loop('daki-life'),
     videoAspect: 540 / 1172,
-    youtube: { id: 'JUk0lO5SMFw', short: true },
     galleryImages: [],
     summary:
       'Journaling is one of the most evidence-backed habits for mental clarity, yet most people quit because it\'s inconvenient.',
@@ -321,7 +320,10 @@ export const projects: Project[] = [
       'OpenAI gpt-4o-mini',
       'Supabase',
     ],
-    links: [{ label: 'GitHub', url: 'https://github.com/Angelicpancake/daki_life' }],
+    links: [
+      { label: 'GitHub', url: 'https://github.com/Angelicpancake/daki_life' },
+      { label: 'Devpost', url: 'https://devpost.com/software/daki-life-ks9eri' },
+    ],
   },
   {
     id: 'food-ninja',
