@@ -16,9 +16,9 @@ export default function Header() {
         <img
           src={asset('/assets/brand/joshua.png')}
           alt="Joshua"
-          width={112}
-          height={112}
-          className="size-24 object-contain transition-transform duration-300 hover:scale-110 md:size-28"
+          width={56}
+          height={56}
+          className="size-12 object-contain transition-transform duration-300 hover:scale-110 md:size-14"
         />
       </Link>
 
