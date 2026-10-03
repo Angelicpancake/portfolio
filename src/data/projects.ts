@@ -28,6 +28,8 @@ export interface Project {
   /** YouTube id; `short` switches the embed to a vertical aspect ratio. */
   youtube?: { id: string; short?: boolean };
   videoUrl?: string;
+  /** width / height of videoUrl, so portrait clips aren't forced into 16:9. */
+  videoAspect?: number;
   galleryImages: string[];
   summary: string;
   sections: Section[];
@@ -37,7 +39,8 @@ export interface Project {
   links: { label: string; url: string }[];
 }
 
-const thumb = (slug: string) => asset(`/assets/projects/${slug}.svg`);
+const thumb = (slug: string, ext = 'svg') => asset(`/assets/projects/${slug}.${ext}`);
+const loop = (slug: string) => asset(`/assets/projects/${slug}.mp4`);
 
 export const projects: Project[] = [
   {
@@ -228,7 +231,9 @@ export const projects: Project[] = [
     tagline: 'A Focus Journal That Turns Your Notes into a Living Knowledge Graph',
     category: 'Mobile app',
     tags: ['AI', 'Mobile'],
-    thumbnailUrl: thumb('daki-life'),
+    thumbnailUrl: thumb('daki-life', 'jpg'),
+    videoUrl: loop('daki-life'),
+    videoAspect: 540 / 1172,
     youtube: { id: 'JUk0lO5SMFw', short: true },
     galleryImages: [],
     summary:
@@ -319,7 +324,9 @@ export const projects: Project[] = [
     tagline: 'Multiplayer Fruit-Slicing Game Controlled by Your Webcam',
     category: 'Web game',
     tags: ['Games', 'Web'],
-    thumbnailUrl: thumb('food-ninja'),
+    thumbnailUrl: thumb('food-ninja', 'jpg'),
+    videoUrl: loop('food-ninja'),
+    videoAspect: 16 / 9,
     galleryImages: [],
     summary:
       'I wanted to build a game with my friends over the summer that we could play against each other.',

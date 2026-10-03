@@ -61,7 +61,7 @@ export default function ProjectDetail({ project, prev, next }: Props) {
 
       <div className="mt-10">
         {project.videoUrl ? (
-          <AutoplayVideo src={project.videoUrl} poster={project.thumbnailUrl} title={project.title} />
+          <AutoplayVideo src={project.videoUrl} poster={project.thumbnailUrl} title={project.title} aspect={project.videoAspect} />
         ) : project.youtube ? (
           <YouTubeEmbed id={project.youtube.id} title={project.title} short={project.youtube.short} />
         ) : (
@@ -83,6 +83,13 @@ export default function ProjectDetail({ project, prev, next }: Props) {
           </ul>
         </aside>
       </motion.div>
+
+      {project.videoUrl && project.youtube && (
+        <motion.section {...fade} className="mt-20" aria-label="Full demo">
+          <h2 className="micro mb-4 text-mute">Watch the full demo</h2>
+          <YouTubeEmbed id={project.youtube.id} title={project.title} short={project.youtube.short} />
+        </motion.section>
+      )}
 
       {project.galleryImages.length > 0 && (
         <section className="mt-20 space-y-4" aria-label="Gallery">

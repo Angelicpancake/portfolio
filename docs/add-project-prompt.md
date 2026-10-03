@@ -19,7 +19,7 @@ You are updating the project data for this Next.js portfolio. Source material: `
    - `links`: GitHub / demo / website URLs. `youtube`: `{ id, short? }` from watch/shorts URLs.
    - `tags` and `category`: only what the source implies; reuse existing tags where possible (`src/data/projects.ts` → `allTags`).
 3. Add a thumbnail: add the slug to `scripts/gen-placeholders.mjs` and run `node scripts/gen-placeholders.mjs`, or put a real image at `public/assets/projects/<slug>.<ext>` and point `thumbnailUrl` at it.
-3b. Video (optional): put an `.mp4` at `public/assets/projects/<slug>.mp4` and set `videoUrl: asset('/assets/projects/<slug>.mp4')` (import `asset` from `@/lib/asset` so it works under the GitHub Pages base path); likewise wrap `galleryImages` entries. It then autoplays (muted, looped) on the 3D wall tile and the detail page; the YouTube embed is only used when there is no `videoUrl`.
+3b. Video (optional): put an `.mp4` at `public/assets/projects/<slug>.mp4` and set `videoUrl: asset('/assets/projects/<slug>.mp4')` (import `asset` from `@/lib/asset` so it works under the GitHub Pages base path); likewise wrap `galleryImages` entries. Set `videoAspect` (width/height) for non-16:9 clips. Make loops with: `ffmpeg -ss <start> -t 9 -i demo.mp4 -an -vf "scale=960:-2,fps=30" -c:v libx264 -crf 25 -pix_fmt yuv420p -movflags +faststart public/assets/projects/<slug>.mp4` (portrait: `scale=540:-2`), plus a poster: `ffmpeg -ss <t> -i demo.mp4 -frames:v 1 public/assets/projects/<slug>.jpg`. Keep raw footage in `source-videos/` (gitignored). It then autoplays (muted, looped) on the 3D wall tile and the detail page; the YouTube embed is only used when there is no `videoUrl`.
 4. Run `npm run type-check && npm run lint && npm run build`.
 
 **Rules**
