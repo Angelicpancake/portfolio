@@ -47,7 +47,6 @@ export const about = {
   awards: [
     'Qualcomm Inclusion Scholar (2026)',
     'FTC World Championships qualifier (2025)',
-    "Dean's List",
     'Hack Reddit recognized for exceptional UX, polish, platform-native design',
   ],
 };
