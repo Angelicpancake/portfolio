@@ -23,3 +23,4 @@ npm run lint && npm run type-check
 ## Audio & video
 - Audio is muted until `[SOUND ON]`. Sounds are synthesized by default (hover tick, click, enter/back whoosh, ambient pad, ambient ducks inside projects). To use your own, add `swoosh-in.mp3`, `swoosh-out.mp3`, `ambient.mp3`, `hover.mp3`, `click.mp3` to `public/audio/`; they're picked up automatically.
 - Video: set a project's `videoUrl` to an `.mp4` in `public/assets/projects/` to autoplay it on the wall tile and project page.
+- Swap the background music with the prompt in `docs/background-music-prompt.md` (file goes at `public/audio/ambient.mp3`).

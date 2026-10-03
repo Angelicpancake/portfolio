@@ -7,7 +7,7 @@ import { useAudioStore } from '@/store/useAudioStore';
  */
 type Name = 'swoosh-in' | 'swoosh-out' | 'ambient' | 'hover' | 'click';
 const NAMES: Name[] = ['swoosh-in', 'swoosh-out', 'ambient', 'hover', 'click'];
-const AMBIENT_LEVEL = 0.5;
+const AMBIENT_LEVEL = 0.3; // a full song sits lower than the synth pad did
 const DEDUPE_MS = 2500;
 
 let ctx: AudioContext | null = null;
