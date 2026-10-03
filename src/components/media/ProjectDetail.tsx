@@ -92,22 +92,33 @@ export default function ProjectDetail({ project, prev, next }: Props) {
       )}
 
       {project.galleryImages.length > 0 && (
-        <section className="mt-20 space-y-4" aria-label="Gallery">
-          {project.galleryImages.map((src, i) => (
-            <motion.button
-              key={src}
-              type="button"
-              {...fade}
-              onClick={() => {
-                sfx.click();
-                setLightbox(i);
-              }}
-              className="block w-full cursor-zoom-in overflow-hidden rounded-2xl"
-              aria-label={`Open image ${i + 1}`}
-            >
-              <img src={src} alt={`${project.title} screenshot ${i + 1}`} loading="lazy" className="w-full transition-transform duration-700 hover:scale-[1.02]" />
-            </motion.button>
-          ))}
+        <section className="mt-20" aria-label={project.galleryTitle ?? 'Gallery'}>
+          <div className="mb-4 flex items-baseline justify-between gap-4">
+            <h2 className="micro text-mute">{project.galleryTitle ?? 'Gallery'}</h2>
+            <p className="micro text-mute/70">Click to zoom</p>
+          </div>
+          <div className="space-y-4">
+            {project.galleryImages.map((src, i) => (
+              <motion.button
+                key={src}
+                type="button"
+                {...fade}
+                onClick={() => {
+                  sfx.click();
+                  setLightbox(i);
+                }}
+                className="block w-full cursor-zoom-in overflow-hidden rounded-2xl border border-white/10 bg-black/40 p-2 md:p-4"
+                aria-label={`Open image ${i + 1} full size`}
+              >
+                <img
+                  src={src}
+                  alt={`${project.title}: ${project.galleryTitle ?? 'image'} ${i + 1}`}
+                  loading="lazy"
+                  className="w-full"
+                />
+              </motion.button>
+            ))}
+          </div>
         </section>
       )}
 

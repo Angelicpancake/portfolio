@@ -31,6 +31,8 @@ export interface Project {
   /** width / height of videoUrl, so portrait clips aren't forced into 16:9. */
   videoAspect?: number;
   galleryImages: string[];
+  /** Heading above the gallery (defaults to "Gallery"). */
+  galleryTitle?: string;
   summary: string;
   sections: Section[];
   /** Verbatim "Built with" text from the write-up. */
@@ -240,7 +242,8 @@ export const projects: Project[] = [
     thumbnailUrl: thumb('daki-life', 'jpg'),
     videoUrl: loop('daki-life'),
     videoAspect: 540 / 1172,
-    galleryImages: [],
+    galleryImages: [asset('/assets/projects/daki-life-infra.png')],
+    galleryTitle: 'Core infrastructure',
     summary:
       'Journaling is one of the most evidence-backed habits for mental clarity, yet most people quit because it\'s inconvenient.',
     sections: [

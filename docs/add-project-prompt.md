@@ -41,3 +41,4 @@ Built with: <text>
 ```
 
 For videos, use `docs/add-project-video-prompt.md`.
+For images and diagrams, use `docs/add-project-image-prompt.md`.
