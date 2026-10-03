@@ -50,8 +50,9 @@ export const projects: Project[] = [
     tagline: 'Japanese Kanji Learning on Reddit',
     category: 'Reddit app',
     tags: ['Web', 'Games'],
-    thumbnailUrl: thumb('itadaki'),
-    youtube: { id: '8bwv2cXZcyE' },
+    thumbnailUrl: thumb('itadaki', 'jpg'),
+    videoUrl: loop('itadaki'),
+    videoAspect: 16 / 9,
     galleryImages: [],
     summary:
       'After four years of studying Japanese, I found that apps like Duolingo and Quizlet lacked an intuitive way to build kanji vocabulary gradually.',
@@ -95,7 +96,10 @@ export const projects: Project[] = [
     builtWith:
       "Reddit Devvit, TypeScript, Redis, and the Jisho API. It was a one-month build that earned recognition from Hack Reddit judges for UX, polish, and platform-native design (Note: The live Reddit app is no longer working because it hasn't been updated for Reddit's recent platform changes).",
     stack: ['Reddit Devvit', 'TypeScript', 'Redis', 'Jisho API'],
-    links: [{ label: 'GitHub', url: 'https://github.com/Angelicpancake/itadaki_ocb' }],
+    links: [
+      { label: 'GitHub', url: 'https://github.com/Angelicpancake/itadaki_ocb' },
+      { label: 'Video', url: 'https://www.youtube.com/watch?v=8bwv2cXZcyE' },
+    ],
   },
   {
     id: 'foodrng',
@@ -104,7 +108,9 @@ export const projects: Project[] = [
     tagline: 'Collect, Fuse, and Upgrade Dishes from Around the World',
     category: 'Roblox game',
     tags: ['Games'],
-    thumbnailUrl: thumb('foodrng'),
+    thumbnailUrl: thumb('foodrng', 'jpg'),
+    videoUrl: loop('foodrng'),
+    videoAspect: 16 / 9,
     galleryImages: [],
     summary:
       'I love game design, and I wanted to team up with my friends to build something fun together.',

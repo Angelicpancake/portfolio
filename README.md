@@ -30,3 +30,4 @@ npm run lint && npm run type-check
 - One-time: GitHub repo → Settings → Pages → Source: **GitHub Actions**. The site appears at `https://<user>.github.io/<repo>/`.
 - Local production check: `NEXT_PUBLIC_BASE_PATH=/portfolio npm run build`. Plain `npm run dev` uses no base path.
 - Music credit: fill in `docs/music-credits.md` and the line at the bottom of the About page.
+- Project videos: use the prompt in `docs/add-project-video-prompt.md` (loop + first-frame poster, under ~1 MB each; raw files stay in the gitignored `source-videos/`).

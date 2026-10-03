@@ -39,3 +39,5 @@ What it does: <text>
   <Label>: <text>
 Built with: <text>
 ```
+
+For videos, use `docs/add-project-video-prompt.md`.
