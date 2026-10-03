@@ -2,13 +2,13 @@
 'use client';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { matchesFilter, projects } from '@/data/projects';
+import { getBlurb, matchesFilter, projects } from '@/data/projects';
 import { sfx } from '@/hooks/useAudio';
 import { useStore } from '@/store/useStore';
 import PreviewVideo from './PreviewVideo';
 
 /** Filterable 2D card grid: the mobile Work view and the /projects catalog. */
-export default function ProjectGrid({ className = '' }: { className?: string }) {
+export default function ProjectGrid({ className = '', showBlurb = true }: { className?: string; showBlurb?: boolean }) {
   const activeTags = useStore((s) => s.activeTags);
   const list = projects.filter((p) => matchesFilter(p, activeTags));
 
@@ -24,7 +24,7 @@ export default function ProjectGrid({ className = '' }: { className?: string }) 
           transition={{ duration: 0.5, delay: (i % 4) * 0.06 }}
         >
           <Link href={`/projects/${p.slug}`} onClick={sfx.click} onMouseEnter={sfx.hover} className="group block">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-white/5">
+            <div className="relative aspect-[5/4] overflow-hidden rounded-2xl bg-white/5">
               {p.videoUrl ? (
                 <PreviewVideo
                   src={p.videoUrl}
@@ -41,11 +41,19 @@ export default function ProjectGrid({ className = '' }: { className?: string }) 
                 />
               )}
             </div>
-            <div className="micro mt-3 flex items-baseline justify-between gap-2">
-              <span className="text-paper">{p.title}</span>
-              <span className="text-mute">{p.category}</span>
+            <div className="mt-3 flex items-baseline justify-between gap-2">
+              <span className="text-lg font-medium leading-tight text-paper">{p.title}</span>
+              <span className="micro shrink-0 text-mute">{p.category}</span>
             </div>
-            <p className="micro text-mute">{p.tags.join(' · ')}</p>
+            <p className="mt-1 text-sm leading-snug text-paper/70">{p.tagline}</p>
+            {showBlurb && <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-mute">{getBlurb(p)}</p>}
+            <ul className="mt-3 flex flex-wrap gap-1.5">
+              {p.tags.map((t) => (
+                <li key={t} className="micro rounded-full border border-white/15 px-2.5 py-1 text-paper/80">
+                  {t}
+                </li>
+              ))}
+            </ul>
           </Link>
         </motion.li>
       ))}

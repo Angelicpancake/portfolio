@@ -1,15 +1,34 @@
 'use client';
 import { Suspense, useMemo, useRef, useState } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useFrame, useThree, type ThreeEvent } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
-import { PlaneGeometry, ShaderMaterial, SRGBColorSpace, Vector3, type Group, type Mesh } from 'three';
+import { MeshBasicMaterial, PlaneGeometry, ShaderMaterial, SRGBColorSpace, Vector3, type Group, type Mesh } from 'three';
 import type { Project } from '@/data/projects';
 import { sfx } from '@/hooks/useAudio';
 import { useStore } from '@/store/useStore';
+import { getCaptionTexture } from './captionTexture';
 import ProjectVideoMesh, { coverScale } from './ProjectVideoMesh';
 
 export const TILE_W = 3.6;
-export const TILE_H = 4.5;
+/** Media is cropped to this height (cover-fit) to leave room for the caption beneath it. */
+const MEDIA_H = 3.3;
+const CAPTION_H = 1.4;
+export const TILE_H = MEDIA_H + CAPTION_H;
+const MEDIA_Y = (TILE_H - MEDIA_H) / 2;
+const CAPTION_Y = -(TILE_H - CAPTION_H) / 2;
+
+/** A plane bent onto the wall's cylinder so edges curve toward the viewer at the centre. */
+const bentPlane = (w: number, h: number, radius: number) => {
+  const g = new PlaneGeometry(w, h, 24, 1);
+  const pos = g.attributes.position;
+  for (let i = 0; i < pos.count; i++) {
+    const a = pos.getX(i) / radius;
+    pos.setX(i, Math.sin(a) * radius);
+    pos.setZ(i, radius * (1 - Math.cos(a)));
+  }
+  g.computeVertexNormals();
+  return g;
+};
 
 const vertexShader = /* glsl */ `
 varying vec2 vUv;
@@ -61,22 +80,23 @@ export function ProjectCard3D({ project, angle, y, radius, visible, delay, onSel
   const tmpPos = useMemo(() => new Vector3(), []);
   const tmpDir = useMemo(() => new Vector3(), []);
 
-  // plane bent onto the cylinder so edges curve toward the viewer at the centre
-  const geometry = useMemo(() => {
-    const g = new PlaneGeometry(TILE_W, TILE_H, 24, 1);
-    const pos = g.attributes.position;
-    for (let i = 0; i < pos.count; i++) {
-      const a = pos.getX(i) / radius;
-      pos.setX(i, Math.sin(a) * radius);
-      pos.setZ(i, radius * (1 - Math.cos(a)));
-    }
-    g.computeVertexNormals();
-    return g;
-  }, [radius]);
+  const geometry = useMemo(() => bentPlane(TILE_W, MEDIA_H, radius), [radius]);
+  const captionGeometry = useMemo(() => bentPlane(TILE_W, CAPTION_H, radius), [radius]);
+  const captionMaterial = useMemo(
+    () =>
+      new MeshBasicMaterial({
+        map: getCaptionTexture(project),
+        transparent: true,
+        opacity: 0,
+        depthWrite: false,
+        toneMapped: false,
+      }),
+    [project],
+  );
 
   const material = useMemo(() => {
     const img = texture.image as { width: number; height: number } | undefined;
-    const scale = coverScale(img?.width ?? 1, img?.height ?? 1, TILE_W / TILE_H);
+    const scale = coverScale(img?.width ?? 1, img?.height ?? 1, TILE_W / MEDIA_H);
     return new ShaderMaterial({
       vertexShader,
       fragmentShader,
@@ -109,38 +129,39 @@ export function ProjectCard3D({ project, angle, y, radius, visible, delay, onSel
     g.visible = next > 0.005;
     material.uniforms.uHover.value = hover.current;
     material.uniforms.uOpacity.value += (target * appear.current - material.uniforms.uOpacity.value) * Math.min(1, delta * 8);
+    captionMaterial.opacity = material.uniforms.uOpacity.value * (0.78 + 0.22 * hover.current);
   });
+
+  const pointer = {
+    onPointerOver: (e: ThreeEvent<PointerEvent>) => {
+      if (!visible) return;
+      e.stopPropagation();
+      hovered.current = true;
+      gl.domElement.style.cursor = 'pointer';
+      useStore.getState().setHoverSlug(project.slug);
+      sfx.hover();
+    },
+    onPointerOut: () => {
+      hovered.current = false;
+      gl.domElement.style.cursor = 'grab';
+      if (useStore.getState().hoverSlug === project.slug) useStore.getState().setHoverSlug(null);
+    },
+    onClick: (e: ThreeEvent<MouseEvent>) => {
+      // ignore the click that ends a drag
+      if (!visible || e.delta > 6 || !mesh.current) return;
+      e.stopPropagation();
+      onSelect(project, mesh.current);
+    },
+  };
 
   return (
     <group rotation-y={angle}>
       <group position={[0, y, -radius]} ref={scaleGroup}>
-        <mesh
-          ref={mesh}
-          geometry={geometry}
-          material={material}
-          onPointerOver={(e) => {
-            if (!visible) return;
-            e.stopPropagation();
-            hovered.current = true;
-            gl.domElement.style.cursor = 'pointer';
-            useStore.getState().setHoverSlug(project.slug);
-            sfx.hover();
-          }}
-          onPointerOut={() => {
-            hovered.current = false;
-            gl.domElement.style.cursor = 'grab';
-            if (useStore.getState().hoverSlug === project.slug) useStore.getState().setHoverSlug(null);
-          }}
-          onClick={(e) => {
-            // ignore the click that ends a drag
-            if (!visible || e.delta > 6 || !mesh.current) return;
-            e.stopPropagation();
-            onSelect(project, mesh.current);
-          }}
-        />
+        <mesh ref={mesh} geometry={geometry} material={material} position={[0, MEDIA_Y, 0]} {...pointer} />
+        <mesh geometry={captionGeometry} material={captionMaterial} position={[0, CAPTION_Y, 0]} {...pointer} />
         {live && project.videoUrl && (
           <Suspense fallback={null}>
-            <ProjectVideoMesh url={project.videoUrl} material={material} fallback={texture} planeAspect={TILE_W / TILE_H} />
+            <ProjectVideoMesh url={project.videoUrl} material={material} fallback={texture} planeAspect={TILE_W / MEDIA_H} />
           </Suspense>
         )}
       </group>

@@ -415,3 +415,10 @@ export const getAdjacent = (slug: string) => {
 
 export const matchesFilter = (p: Project, tags: string[]) =>
   tags.length === 0 || tags.some((t) => p.tags.includes(t));
+
+/** Longer description for cards: the first paragraph of the "What it does" section, verbatim. */
+export const getBlurb = (p: Project): string => {
+  const section = p.sections.find((s) => s.heading === 'What it does');
+  const para = section?.blocks.find((b): b is Extract<Block, { type: 'p' }> => b.type === 'p');
+  return para?.text ?? p.summary;
+};

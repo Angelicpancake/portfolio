@@ -9,7 +9,7 @@ export default function HomeView() {
   return (
     <section className="min-h-screen px-4 pb-32 pt-24">
       <h1 className="micro mb-6 text-mute">Selected work</h1>
-      <ProjectGrid />
+      <ProjectGrid showBlurb={false} />
     </section>
   );
 }

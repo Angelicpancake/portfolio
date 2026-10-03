@@ -5,7 +5,6 @@ import CanvasContainer from '@/components/3d/CanvasContainer';
 import Header from '@/components/ui/Header';
 import Navigation from '@/components/ui/Navigation';
 import FilterModal from '@/components/ui/FilterModal';
-import HoverLabel from '@/components/ui/HoverLabel';
 import TransitionOverlay from '@/components/ui/TransitionOverlay';
 import AudioController from '@/components/ui/AudioController';
 import SmoothScroll from '@/components/ui/SmoothScroll';
@@ -31,7 +30,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="relative z-10">{children}</main>
         <Navigation />
         <FilterModal />
-        <HoverLabel />
         <TransitionOverlay />
       </body>
     </html>

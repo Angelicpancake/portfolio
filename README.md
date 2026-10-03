@@ -34,3 +34,4 @@ npm run lint && npm run type-check
 - The Projects tab and mobile grid cards play each project's loop as a muted preview (only while on screen); projects without a `videoUrl` show their still.
 - Images/diagrams on a project page: use `docs/add-project-image-prompt.md` (`galleryImages` + `galleryTitle`, click-to-zoom lightbox).
 - Swap the header logo with `docs/update-logo-prompt.md` (icon lives in `public/assets/brand/`).
+- Text on wall tiles and project cards: see `docs/project-card-text-prompt.md` (title + tagline + tags on the wall; plus a 3-line description on the Projects tab).
