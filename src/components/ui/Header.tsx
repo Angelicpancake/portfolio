@@ -1,5 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 import Link from 'next/link';
+import { asset } from '@/lib/asset';
 import { useTimezones } from '@/hooks/useTimezones';
 import { sfx, toggleMute } from '@/hooks/useAudio';
 import { useAudioStore } from '@/store/useAudioStore';
@@ -10,9 +12,14 @@ export default function Header() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 flex items-start justify-between gap-4 px-4 py-4 md:px-8 md:py-6">
-      <Link href="/" className="micro flex items-center gap-2 text-paper" onClick={sfx.click} aria-label="Home">
-        <span className="inline-block size-3 rounded-full bg-accent" />
-        <span className="font-semibold tracking-[0.2em]">JR®</span>
+      <Link href="/" className="flex items-center" onClick={sfx.click} aria-label="Home">
+        <img
+          src={asset('/assets/brand/joshua.png')}
+          alt="Joshua"
+          width={36}
+          height={36}
+          className="size-8 object-contain transition-transform duration-300 hover:scale-110 md:size-9"
+        />
       </Link>
 
       <div className="micro hidden items-center gap-6 text-mute md:flex" aria-label="Local times">

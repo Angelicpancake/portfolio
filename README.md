@@ -33,3 +33,4 @@ npm run lint && npm run type-check
 - Project videos: use the prompt in `docs/add-project-video-prompt.md` (loop + first-frame poster, under ~1 MB each; raw files stay in the gitignored `source-videos/`).
 - The Projects tab and mobile grid cards play each project's loop as a muted preview (only while on screen); projects without a `videoUrl` show their still.
 - Images/diagrams on a project page: use `docs/add-project-image-prompt.md` (`galleryImages` + `galleryTitle`, click-to-zoom lightbox).
+- Swap the header logo with `docs/update-logo-prompt.md` (icon lives in `public/assets/brand/`).
