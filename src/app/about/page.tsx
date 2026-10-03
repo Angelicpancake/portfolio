@@ -1,56 +1,96 @@
+/* eslint-disable @next/next/no-img-element */
 import type { Metadata } from 'next';
+import { about, type Entry } from '@/data/about';
+import { asset } from '@/lib/asset';
 
-export const metadata: Metadata = { title: 'About — Portfolio' };
+export const metadata: Metadata = {
+  title: 'About — Portfolio',
+  description: about.headline,
+};
 
-const SKILLS = ['TypeScript', 'React / Next.js', 'Three.js / WebGL', 'GLSL', 'Node', 'Python', 'AI / LLM apps', 'Motion design'];
-const TIMELINE = [
-  { year: '2025', title: 'Independent', body: 'Building interactive experiences and AI-powered tools.' },
-  { year: '2023', title: 'Senior Engineer', body: 'Led front-end for a realtime analytics product.' },
-  { year: '2021', title: 'Creative Developer', body: 'Brand sites and WebGL campaigns for studios.' },
-  { year: '2019', title: 'Started out', body: 'First commercial work in web development.' },
-];
+const Heading = ({ children }: { children: React.ReactNode }) => <h2 className="micro mb-4 text-mute">{children}</h2>;
+
+const Chips = ({ items }: { items: string[] }) => (
+  <ul className="flex flex-wrap gap-2">
+    {items.map((s) => (
+      <li key={s} className="micro rounded-full border border-white/15 px-4 py-2">
+        {s}
+      </li>
+    ))}
+  </ul>
+);
+
+const Timeline = ({ entries }: { entries: Entry[] }) => (
+  <ol className="divide-y divide-white/10 border-y border-white/10">
+    {entries.map((e) => (
+      <li key={`${e.year}-${e.title}`} className="grid grid-cols-[6rem_1fr] gap-4 py-6">
+        <span className="micro pt-1.5 text-accent">{e.year}</span>
+        <div>
+          <p className="text-xl leading-snug">{e.title}</p>
+          <p className="mt-1 text-paper/60">{e.description}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+);
 
 export default function AboutPage() {
   return (
     <section className="min-h-screen bg-ink px-4 pb-40 pt-28 md:px-8">
-      <h1 className="max-w-4xl text-4xl font-medium leading-[1.05] tracking-tight md:text-7xl">
-        I build interactive software and creative experiences for the web.
-      </h1>
-      <div className="mt-16 grid gap-16 md:grid-cols-2">
-        <div>
-          <h2 className="micro mb-4 text-mute">Profile</h2>
-          <p className="max-w-lg text-lg leading-relaxed text-paper/80">
-            Replace this with your own story. Placeholder copy: a developer working between engineering and design, obsessed with motion,
-            performance and the small details that make a site feel alive.
-          </p>
-          <h2 className="micro mb-4 mt-12 text-mute">Skills</h2>
-          <ul className="flex flex-wrap gap-2">
-            {SKILLS.map((s) => (
-              <li key={s} className="micro rounded-full border border-white/15 px-4 py-2">
-                {s}
-              </li>
-            ))}
-          </ul>
+      <div className="grid gap-12 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-16">
+        <div className="md:sticky md:top-28 md:self-start">
+          <img
+            src={asset('/assets/profile.jpg')}
+            alt={about.name}
+            width={1000}
+            height={1250}
+            className="aspect-[4/5] w-full max-w-md rounded-2xl object-cover"
+          />
         </div>
+
         <div>
-          <h2 className="micro mb-4 text-mute">Timeline</h2>
-          <ol className="divide-y divide-white/10 border-y border-white/10">
-            {TIMELINE.map((t) => (
-              <li key={t.year} className="grid grid-cols-[5rem_1fr] gap-4 py-6">
-                <span className="micro text-accent">{t.year}</span>
-                <div>
-                  <p className="text-xl">{t.title}</p>
-                  <p className="mt-1 text-paper/60">{t.body}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
+          <h1 className="text-3xl font-medium leading-[1.1] tracking-tight md:text-5xl">{about.headline}</h1>
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-paper/75">{about.paragraph}</p>
+
+          <div className="mt-16">
+            <Heading>Work experience</Heading>
+            <Timeline entries={about.work} />
+          </div>
+
+          <div className="mt-16">
+            <Heading>Clubs / Extracurriculars</Heading>
+            <Timeline entries={about.clubs} />
+          </div>
+
+          <div className="mt-16">
+            <Heading>Skills</Heading>
+            <Chips items={about.skills.map((s) => s.toUpperCase())} />
+          </div>
+
+          <div className="mt-16 grid gap-16 md:grid-cols-2">
+            <div>
+              <Heading>Hobbies</Heading>
+              <Chips items={about.hobbies} />
+            </div>
+            <div>
+              <Heading>Awards</Heading>
+              <ul className="space-y-3 text-paper/80">
+                {about.awards.map((a) => (
+                  <li key={a} className="flex gap-3 leading-snug">
+                    <span className="mt-[0.55em] size-1.5 shrink-0 rounded-full bg-accent" aria-hidden />
+                    {a}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <p className="micro mt-20 text-mute">
+            {/* TODO: replace with the real title, creator and source link (see docs/music-credits.md) */}
+            Music: TODO title by TODO creator, used with credit.
+          </p>
         </div>
       </div>
-      <p className="micro mt-20 text-mute">
-        {/* TODO: replace with the real title, creator and source link (see docs/music-credits.md) */}
-        Music: TODO title by TODO creator, used with credit.
-      </p>
     </section>
   );
 }
