@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { matchesFilter, projects } from '@/data/projects';
 import { sfx } from '@/hooks/useAudio';
 import { useStore } from '@/store/useStore';
+import PreviewVideo from './PreviewVideo';
 
 /** Filterable 2D card grid: the mobile Work view and the /projects catalog. */
 export default function ProjectGrid({ className = '' }: { className?: string }) {
@@ -24,12 +25,21 @@ export default function ProjectGrid({ className = '' }: { className?: string }) 
         >
           <Link href={`/projects/${p.slug}`} onClick={sfx.click} onMouseEnter={sfx.hover} className="group block">
             <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-white/5">
-              <img
-                src={p.thumbnailUrl}
-                alt={p.title}
-                loading="lazy"
-                className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
-              />
+              {p.videoUrl ? (
+                <PreviewVideo
+                  src={p.videoUrl}
+                  poster={p.thumbnailUrl}
+                  alt={p.title}
+                  className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+                />
+              ) : (
+                <img
+                  src={p.thumbnailUrl}
+                  alt={p.title}
+                  loading="lazy"
+                  className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+                />
+              )}
             </div>
             <div className="micro mt-3 flex items-baseline justify-between gap-2">
               <span className="text-paper">{p.title}</span>

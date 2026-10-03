@@ -22,3 +22,17 @@ Integrate `source-videos/<name>.mp4` into the project with slug `<slug>`.
 
 **Verify and report**
 Run `npm run type-check && npm run lint`, then `NEXT_PUBLIC_BASE_PATH=/portfolio npm run build`. View the poster. Report the chosen window, file sizes, and anything I should check in the browser. Commit only the loop, poster, data and docs.
+
+---
+
+## Prompt: re-cut an existing clip
+
+Paste into Claude Code. Fill in `<…>`.
+
+Re-cut the loop for `<slug>` from `source-videos/<name>.mp4` so it **starts at <describe the moment, e.g. "the blue pancake mid-flip" / "the first clear kanji screen">**.
+1. Extract frames every 0.5 s around `<approx time range>` into the scratchpad as a contact sheet and view it. Choose the start time where the moment is **sharp and fully visible** (avoid fade-ins/blur); tell me the time you chose.
+2. Re-encode the 10 s loop with the same settings as the video prompt above (`-an`, 960×540 or 540-wide portrait, `-crf 25`, `+faststart`), keeping the source fps if it is 24.
+3. Regenerate the poster from the **new loop's first frame** (`ffmpeg -i public/assets/projects/<slug>.mp4 -frames:v 1 …<slug>.jpg`) so the wall tile, grid card and video start match. View the poster to confirm.
+4. No code changes needed. Report sizes, then commit only the new `.mp4` and `.jpg`.
+
+**Where previews show:** the 3D wall tiles, the project page hero, and the Projects tab / mobile grid cards (`PreviewVideo`) all use the project's `videoUrl` + `thumbnailUrl`, so re-cutting one loop updates every place.
