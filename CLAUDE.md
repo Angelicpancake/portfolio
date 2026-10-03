@@ -62,3 +62,7 @@ npm run type-check    # Run TypeScript compiler check without emitting files
 
 # Formatting & Maintenance
 npm run format        # Format codebase with Prettier
+
+## Adding projects
+
+Project write-ups live in `src/data/projects.ts` and render verbatim via `components/media/SectionRenderer.tsx`. To add or update them from a PDF/notes, use the prompt in `docs/add-project-prompt.md`.

@@ -1,59 +1,384 @@
+/** A labelled or plain bullet. Rendered as "Label: text" when a label is present. */
+export interface Item {
+  label?: string;
+  text: string;
+}
+
+export type Block =
+  | { type: 'p'; text: string }
+  | { type: 'list'; items: Item[] }
+  | { type: 'group'; title: string; items: Item[] };
+
+export interface Section {
+  heading: string;
+  blocks: Block[];
+}
+
 export interface Project {
   id: string;
   slug: string;
   title: string;
+  tagline: string;
   category: string;
-  year: number;
+  year?: number;
   tags: string[];
   thumbnailUrl: string;
-  videoUrl: string;
+  /** YouTube id; `short` switches the embed to a vertical aspect ratio. */
+  youtube?: { id: string; short?: boolean };
+  videoUrl?: string;
   galleryImages: string[];
-  description: string;
-  details: string;
+  summary: string;
+  sections: Section[];
+  /** Verbatim "Built with" text from the write-up. */
+  builtWith: string;
   stack: string[];
-  liveUrl: string;
+  links: { label: string; url: string }[];
 }
 
-const VIDEO = 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4';
-
-const make = (
-  slug: string,
-  title: string,
-  category: string,
-  year: number,
-  tags: string[],
-  description: string,
-  details: string,
-  stack: string[],
-): Project => ({
-  id: slug,
-  slug,
-  title,
-  category,
-  year,
-  tags,
-  thumbnailUrl: `/assets/projects/${slug}.svg`,
-  videoUrl: VIDEO,
-  galleryImages: [1, 2, 3].map((i) => `/assets/projects/${slug}-${i}.svg`),
-  description,
-  details,
-  stack,
-  liveUrl: 'https://example.com',
-});
+const thumb = (slug: string) => `/assets/projects/${slug}.svg`;
 
 export const projects: Project[] = [
-  make('aurora', 'Aurora', 'Experience', 2025, ['3D', 'Web'], 'A shader-driven northern lights explorer.', 'Aurora renders volumetric ribbons of light with custom GLSL, reacting to cursor and scroll. Built to run at 60fps on mid-range phones through aggressive instancing and adaptive resolution.', ['React Three Fiber', 'GLSL', 'Next.js', 'GSAP']),
-  make('monolith', 'Monolith', 'Product', 2025, ['Web'], 'A design-system documentation platform.', 'Monolith ships tokens, components and live playgrounds from a single source of truth, with versioned docs and visual regression checks.', ['Next.js', 'TypeScript', 'MDX', 'Tailwind']),
-  make('signal', 'Signal', 'Tool', 2024, ['AI', 'Web'], 'An AI assistant for triaging support inboxes.', 'Signal clusters incoming tickets, drafts replies, and learns from agent edits. Latency budget under 400ms for suggestions.', ['TypeScript', 'Claude API', 'Postgres', 'tRPC']),
-  make('orbit', 'Orbit', 'Experience', 2024, ['3D', 'Creative'], 'An interactive solar-system sound toy.', 'Each planet is an instrument; drag orbits to compose generative music using the Web Audio API.', ['Three.js', 'Web Audio', 'Zustand']),
-  make('lumen', 'Lumen', 'Brand', 2024, ['Creative', 'Web'], 'Launch site for a lighting studio.', 'A scroll-choreographed story site with smooth-scroll sections, video masks and a lightweight CMS.', ['Next.js', 'Framer Motion', 'Lenis', 'Sanity']),
-  make('drift', 'Drift', 'Tool', 2023, ['AI', 'Creative'], 'Generative moodboards from a sentence.', 'Drift turns text prompts into cohesive palettes, textures and layouts, exportable to Figma.', ['Python', 'FastAPI', 'React', 'Diffusion']),
-  make('vector', 'Vector', 'Product', 2023, ['Web', '3D'], 'A browser CAD viewer for large assemblies.', 'Streams and culls multi-million-triangle models using level-of-detail chunks and workers.', ['Three.js', 'WebAssembly', 'Rust', 'React']),
-  make('halo', 'Halo', 'Experience', 2023, ['3D', 'Creative'], 'A WebGL music video companion.', 'Audio-reactive visuals synced to a release, with a shareable photo mode.', ['WebGL', 'GLSL', 'Web Audio']),
-  make('mesh', 'Mesh', 'Tool', 2022, ['AI', '3D'], 'Text-to-3D asset pipeline.', 'Automates generation, retopology and texture baking, delivering glTF ready for the web.', ['Python', 'Blender API', 'glTF', 'Docker']),
-  make('pulse', 'Pulse', 'Product', 2022, ['Web'], 'A realtime team analytics dashboard.', 'Websocket-backed charts that stay smooth with 100k points through canvas rendering and decimation.', ['React', 'D3', 'WebSockets', 'Node']),
-  make('atlas', 'Atlas', 'Experience', 2022, ['3D', 'Web'], 'A tactile globe of travel stories.', 'A draggable globe with geo-tagged stories, atmospheric shaders and offline caching.', ['React Three Fiber', 'TopoJSON', 'PWA']),
-  make('ember', 'Ember', 'Brand', 2021, ['Creative'], 'Identity and microsite for a coffee roaster.', 'Warm, tactile motion language with a playful cursor and an ordering flow.', ['Next.js', 'GSAP', 'Stripe']),
+  {
+    id: 'itadaki',
+    slug: 'itadaki',
+    title: 'Itadaki',
+    tagline: 'Japanese Kanji Learning on Reddit',
+    category: 'Reddit app',
+    tags: ['Web', 'Games'],
+    thumbnailUrl: thumb('itadaki'),
+    youtube: { id: '8bwv2cXZcyE' },
+    galleryImages: [],
+    summary:
+      'After four years of studying Japanese, I found that apps like Duolingo and Quizlet lacked an intuitive way to build kanji vocabulary gradually.',
+    sections: [
+      {
+        heading: 'Inspiration',
+        blocks: [
+          {
+            type: 'p',
+            text: 'After four years of studying Japanese, I found that apps like Duolingo and Quizlet lacked an intuitive way to build kanji vocabulary gradually, and that learning works better with friends. Reddit already has large language-learning communities (r/LearnJapanese, r/Japanese, r/languagelearning), so we built a game that lives where those learners already are.',
+          },
+        ],
+      },
+      {
+        heading: 'What it does',
+        blocks: [
+          {
+            type: 'p',
+            text: 'Itadaki picks 7 high-utility kanji each week and builds vocabulary sets around them using the Jisho dictionary API, cached in Redis.',
+          },
+          {
+            type: 'list',
+            items: [
+              {
+                label: 'Daily Mode',
+                text: 'guess the English meaning of words from the "kanji of the day" for points, or skip if stuck. Players can also comment example sentences and give each other feedback.',
+              },
+              {
+                label: 'Rapid Mode',
+                text: "review all of the week's words in random order to practice active recall.",
+              },
+              {
+                label: 'Leaderboard',
+                text: 'scoring rewards mastery (answering every word correctly earns the most), and the board resets weekly.',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    builtWith:
+      "Reddit Devvit, TypeScript, Redis, and the Jisho API. It was a one-month build that earned recognition from Hack Reddit judges for UX, polish, and platform-native design (Note: The live Reddit app is no longer working because it hasn't been updated for Reddit's recent platform changes).",
+    stack: ['Reddit Devvit', 'TypeScript', 'Redis', 'Jisho API'],
+    links: [{ label: 'GitHub', url: 'https://github.com/Angelicpancake/itadaki_ocb' }],
+  },
+  {
+    id: 'foodrng',
+    slug: 'foodrng',
+    title: 'FoodRNG',
+    tagline: 'Collect, Fuse, and Upgrade Dishes from Around the World',
+    category: 'Roblox game',
+    tags: ['Games'],
+    thumbnailUrl: thumb('foodrng'),
+    galleryImages: [],
+    summary:
+      'I love game design, and I wanted to team up with my friends to build something fun together.',
+    sections: [
+      {
+        heading: 'Inspiration',
+        blocks: [
+          {
+            type: 'p',
+            text: 'I love game design, and I wanted to team up with my friends to build something fun together. We hand-drew every food design in the game, so each dish has its own personality, and turned them into a collectible RNG game where players hunt for rare dishes from around the world.',
+          },
+        ],
+      },
+      {
+        heading: 'What it does',
+        blocks: [
+          {
+            type: 'p',
+            text: 'FoodRNG is a multiplayer Roblox game where players roll for dishes, fill out a cookbook, and stack luck bonuses that make rare rolls more likely.',
+          },
+          {
+            type: 'list',
+            items: [
+              {
+                label: 'Server-authoritative rolling',
+                text: 'the server picks a rarity (Common to Mythical, up to 1 in 2000), then a food from about 134 dishes across 10 countries.',
+              },
+              {
+                label: 'FoodDex and luck bonuses',
+                text: 'collecting new foods and finishing country sets unlocks permanent luck boosts.',
+              },
+              {
+                label: 'Fusion',
+                text: 'combine specific foods (e.g. Gimbap + Onigiri + White Rice) into Mythical recipes.',
+              },
+              { label: 'Star upgrades', text: 'spend duplicate copies to level up a food.' },
+              {
+                label: 'Player data',
+                text: 'inventory, progress, and settings are saved with DataStore, plus daily login rewards.',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    builtWith:
+      'Luau, Roblox Studio, Rojo, Wally (Trove, Observers, t), Selene, and DataStoreService, using custom ModuleScripts with no framework.',
+    stack: ['Luau', 'Roblox Studio', 'Rojo', 'Wally', 'Selene', 'DataStoreService'],
+    links: [{ label: 'GitHub', url: 'https://github.com/Angelicpancake/rblx_foodrng' }],
+  },
+  {
+    id: 'spike-agent',
+    slug: 'spike-agent',
+    title: 'Spike-Agent',
+    tagline: 'Automated Spike Sorting and Unit Quality Scoring for Neural Recordings',
+    category: 'Neurotech / ML',
+    tags: ['AI', 'Research'],
+    thumbnailUrl: thumb('spike-agent'),
+    galleryImages: [],
+    summary:
+      'At Elastro, a Harvard-affiliated neurotech startup, raw recordings have to be sorted into individual neurons before they\'re useful.',
+    sections: [
+      {
+        heading: 'Inspiration',
+        blocks: [
+          {
+            type: 'p',
+            text: "At Elastro, a Harvard-affiliated neurotech startup working on flexible neural electrodes for closed-loop deep brain stimulation, raw recordings have to be sorted into individual neurons before they're useful. Judging which sorted units are real neurons is slow, manual work that needs an expert. I wanted to automate as much of that as possible, so a researcher only has to review the uncertain cases.",
+          },
+        ],
+      },
+      {
+        heading: 'What it does',
+        blocks: [
+          {
+            type: 'p',
+            text: 'Spike-Agent takes raw Intan recordings and turns them into scored, curated neural units in two stages.',
+          },
+          {
+            type: 'group',
+            title: 'Stage 1, spike sorting (built)',
+            items: [
+              { text: 'Loads the .rhd recordings and attaches the real 2D electrode layout.' },
+              {
+                text: 'Preprocesses the signal: bandpass, ADC timing correction, bad-channel removal, and common-reference.',
+              },
+              { text: 'Runs Kilosort4 on an AWS GPU.' },
+              {
+                text: 'Computes per-unit quality metrics (ISI and refractory violations, presence ratio, isolation distance, L-ratio, firing rate).',
+              },
+              { text: 'Auto-excludes noise units with an audit trail.' },
+              { text: 'Saves a per-unit table with spike times and metrics.' },
+            ],
+          },
+          {
+            type: 'group',
+            title: 'Stage 2, quality classifier (in progress)',
+            items: [
+              {
+                text: 'Builds a labeled dataset from rule-based thresholds, LLM proposals, and human review.',
+              },
+              {
+                text: 'Trains logistic regression and random forest classifiers to score each unit, with session-based splits.',
+              },
+              { text: 'Validates on MEArec ground truth first.' },
+              {
+                label: 'Next',
+                text: 'a decoder trained on the curated units, tested by comparing decoding with all units vs. only approved units.',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    builtWith:
+      'Python, SpikeInterface, Kilosort4, PyTorch/CUDA, AWS (EC2 GPU, S3), and scikit-learn for Stage 2.',
+    stack: ['Python', 'SpikeInterface', 'Kilosort4', 'PyTorch/CUDA', 'AWS (EC2 GPU, S3)', 'scikit-learn'],
+    links: [],
+  },
+  {
+    id: 'daki-life',
+    slug: 'daki-life',
+    title: 'Daki Life',
+    tagline: 'A Focus Journal That Turns Your Notes into a Living Knowledge Graph',
+    category: 'Mobile app',
+    tags: ['AI', 'Mobile'],
+    thumbnailUrl: thumb('daki-life'),
+    youtube: { id: 'JUk0lO5SMFw', short: true },
+    galleryImages: [],
+    summary:
+      'Journaling is one of the most evidence-backed habits for mental clarity, yet most people quit because it\'s inconvenient.',
+    sections: [
+      {
+        heading: 'Inspiration',
+        blocks: [
+          {
+            type: 'p',
+            text: "Journaling is one of the most evidence-backed habits for mental clarity, yet most people quit because it's inconvenient: you have to carve out time, face a blank page, and know what to say. Even then, every entry sits in isolation, so it's hard to spot patterns or see how much you've grown. We built Daki Life to make journaling as easy as jotting a thought during a break after a focus session, and to connect all your past ideas so they find each other.",
+          },
+        ],
+      },
+      {
+        heading: 'What it does',
+        blocks: [
+          {
+            type: 'p',
+            text: 'Daki Life is a mobile focus journal that builds a semantic knowledge graph from your reflection notes.',
+          },
+          {
+            type: 'list',
+            items: [
+              { label: 'Focus', text: 'a Pomodoro-style timer, with quick notes after each session.' },
+              {
+                label: 'Graph',
+                text: 'an interactive graph that automatically groups notes into life themes (like Health, Creativity, Relationships) with subtopics nested inside.',
+              },
+              { label: 'Canvas', text: 'a 3D view of the 2D graph.' },
+              {
+                label: 'Home and Day Summaries',
+                text: "session stats, top clusters, time-tracked categories, and a list of each day's entries.",
+              },
+            ],
+          },
+          {
+            type: 'group',
+            title: 'How the graph is built',
+            items: [
+              {
+                label: 'Embedding',
+                text: 'each note is embedded at write time (text-embedding-3-small, 1536 dimensions) and stored in Supabase with pgvector.',
+              },
+              {
+                label: 'Clustering',
+                text: 'UMAP reduces the embeddings to 8D, then HDBSCAN runs recursively to produce a multi-level cluster tree. Outlier notes stay as standalone nodes instead of being forced into a cluster.',
+              },
+              {
+                label: 'Layout',
+                text: 'PaCMAP produces the 2D/3D positions, run per cluster so each one is locally coherent.',
+              },
+              {
+                label: 'Stability',
+                text: "new clusters are matched to old ones by Jaccard similarity, so labels persist and the graph doesn't jump around as notes arrive.",
+              },
+              {
+                label: 'Edges',
+                text: 'cosine similarity connects each note to its nearest neighbors, and cluster centroids to sibling clusters.',
+              },
+              {
+                label: 'Cluster metrics',
+                text: 'taxonomic complexity, information density (TF-IDF), semantic cohesion, and semantic divergence.',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    builtWith:
+      'React Native (Expo), TypeScript, D3, Three.js, Node.js/Express, a Python FastAPI ML sidecar (umap-learn, hdbscan, scikit-learn), OpenAI gpt-4o-mini for cluster labels, and Supabase (Postgres, pgvector, Auth, Realtime).',
+    stack: [
+      'React Native (Expo)',
+      'TypeScript',
+      'D3',
+      'Three.js',
+      'Node.js/Express',
+      'Python FastAPI',
+      'OpenAI gpt-4o-mini',
+      'Supabase',
+    ],
+    links: [{ label: 'GitHub', url: 'https://github.com/Angelicpancake/daki_life' }],
+  },
+  {
+    id: 'food-ninja',
+    slug: 'food-ninja',
+    title: 'Food Ninja',
+    tagline: 'Multiplayer Fruit-Slicing Game Controlled by Your Webcam',
+    category: 'Web game',
+    tags: ['Games', 'Web'],
+    thumbnailUrl: thumb('food-ninja'),
+    galleryImages: [],
+    summary:
+      'I wanted to build a game with my friends over the summer that we could play against each other.',
+    sections: [
+      {
+        heading: 'Inspiration',
+        blocks: [
+          {
+            type: 'p',
+            text: 'I wanted to build a game with my friends over the summer that we could play against each other. We used webcam hand tracking so you slice the fruit with your own hands, and all the food art is hand-drawn by us from our roblox game.',
+          },
+        ],
+      },
+      {
+        heading: 'What it does',
+        blocks: [
+          {
+            type: 'p',
+            text: 'Food Ninja is a real-time multiplayer game where you slice fruit with hand gestures tracked through your webcam.',
+          },
+          {
+            type: 'list',
+            items: [
+              {
+                label: 'Hand tracking',
+                text: 'MediaPipe follows your index fingertip, with smoothing and a motion trail, and registers a slice when the trail crosses a fruit. Spreading your fingers wide triggers a separate bomb gesture.',
+              },
+              {
+                label: 'Multiplayer lobbies',
+                text: 'players join with a 6-character room code, set a name and avatar, and ready up, with no sign-up needed (anonymous auth). Up to 4 players per room.',
+              },
+              {
+                label: 'Live leaderboard',
+                text: 'scores sync through Supabase Realtime during the match.',
+              },
+              {
+                label: 'Combos and lives',
+                text: 'combos raise points per slice, and missed fruit or bombs cost lives.',
+              },
+              { text: 'Results screen with the winner, personal stats, and a play-again option.' },
+            ],
+          },
+        ],
+      },
+    ],
+    builtWith:
+      'React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui, MediaPipe HandLandmarker, and Supabase (Postgres, Realtime, Edge Functions, anonymous auth, row-level security).',
+    stack: [
+      'React 18',
+      'TypeScript',
+      'Vite',
+      'Tailwind CSS',
+      'shadcn/ui',
+      'MediaPipe HandLandmarker',
+      'Supabase',
+    ],
+    links: [
+      { label: 'GitHub', url: 'https://github.com/redY132/fruit' },
+      { label: 'Website', url: 'https://pankolab.dev/' },
+    ],
+  },
 ];
 
 export const allTags: string[] = Array.from(new Set(projects.flatMap((p) => p.tags))).sort();

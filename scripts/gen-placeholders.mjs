@@ -2,9 +2,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 
 const projects = [
-  ['aurora', 210, 280], ['monolith', 260, 20], ['signal', 180, 320], ['orbit', 20, 200],
-  ['lumen', 330, 40], ['drift', 160, 260], ['vector', 290, 190], ['halo', 40, 340],
-  ['mesh', 200, 120], ['pulse', 350, 250], ['atlas', 100, 220], ['ember', 15, 45],
+  ['itadaki', 350, 20], ['foodrng', 25, 50], ['spike-agent', 190, 270], ['daki-life', 260, 320], ['food-ninja', 120, 150],
 ];
 const dir = 'public/assets/projects';
 mkdirSync(dir, { recursive: true });
@@ -25,6 +23,5 @@ const svg = (name, h1, h2, w, h, variant) => {
 
 for (const [name, h1, h2] of projects) {
   writeFileSync(`${dir}/${name}.svg`, svg(name, h1, h2, 800, 1000, 0));
-  for (let i = 1; i <= 3; i++) writeFileSync(`${dir}/${name}-${i}.svg`, svg(name, h1, h2, 1600, 900, i * 3));
 }
-console.log('generated', projects.length * 4, 'files');
+console.log('generated', projects.length, 'files');

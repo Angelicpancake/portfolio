@@ -12,7 +12,7 @@ import { ProjectCard3D, TILE_H } from './ProjectCard3D';
 
 export const RADIUS = 8;
 const COLS = 10;
-const ROWS = 3;
+const ROWS = 2;
 const ROW_GAP = TILE_H + 0.6;
 const BASE_FOV = 50;
 
@@ -102,7 +102,7 @@ export function CurvedWall({ active }: { active: boolean }) {
           key={slot}
           project={project}
           angle={c * step}
-          y={(1 - r) * ROW_GAP}
+          y={((ROWS - 1) / 2 - r) * ROW_GAP}
           radius={RADIUS}
           visible={matchesFilter(project, activeTags)}
           delay={0.1 + (c + r * 2) * 0.045}

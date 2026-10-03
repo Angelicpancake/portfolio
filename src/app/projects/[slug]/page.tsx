@@ -13,7 +13,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const project = getProject((await params).slug);
-  return { title: project ? `${project.title} — Portfolio` : 'Project', description: project?.description };
+  return { title: project ? `${project.title} — Portfolio` : 'Project', description: project?.summary };
 }
 
 export default async function ProjectPage({ params }: { params: Params }) {

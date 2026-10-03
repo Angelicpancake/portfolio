@@ -21,7 +21,7 @@ export default function HoverLabel() {
     <div ref={ref} className="pointer-events-none fixed left-0 top-0 z-[55]" aria-hidden>
       {project && (
         <div className="micro whitespace-nowrap rounded-full bg-paper px-3 py-1.5 text-ink">
-          {project.title} <span className="opacity-50">— {project.category}, {project.year}</span>
+          {project.title} <span className="opacity-50">— {project.category}</span>
         </div>
       )}
     </div>

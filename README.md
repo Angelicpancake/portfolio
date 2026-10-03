@@ -9,9 +9,9 @@ npm run build && npm run start
 npm run lint && npm run type-check
 ```
 
-## Replacing placeholder content
-- Edit `src/data/projects.ts` (titles, tags, links, video URLs).
-- Drop real images in `public/assets/projects/` (`<slug>.svg|jpg` thumbnail 4:5, `<slug>-1..3` gallery) and update the paths.
+## Projects
+- Edit `src/data/projects.ts` or use the reusable prompt in `docs/add-project-prompt.md` to load projects from a PDF/notes.
+- Thumbnails are generated placeholders. Drop real images in `public/assets/projects/` (4:5) and update `thumbnailUrl`; add `galleryImages` to show a lightbox gallery.
 - `scripts/gen-placeholders.mjs` regenerates the gradient placeholders.
 - The About page copy lives in `src/app/about/page.tsx`; the contact API (`src/app/api/contact`) is a validating stub.
 

@@ -33,7 +33,7 @@ export default function ProjectGrid({ className = '' }: { className?: string }) 
             </div>
             <div className="micro mt-3 flex items-baseline justify-between gap-2">
               <span className="text-paper">{p.title}</span>
-              <span className="text-mute">{p.year}</span>
+              <span className="text-mute">{p.category}</span>
             </div>
             <p className="micro text-mute">{p.tags.join(' · ')}</p>
           </Link>
