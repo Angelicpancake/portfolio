@@ -47,6 +47,10 @@ export default function AboutPage() {
           </ol>
         </div>
       </div>
+      <p className="micro mt-20 text-mute">
+        {/* TODO: replace with the real title, creator and source link (see docs/music-credits.md) */}
+        Music: TODO title by TODO creator, used with credit.
+      </p>
     </section>
   );
 }

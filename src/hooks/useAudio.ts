@@ -1,4 +1,5 @@
 'use client';
+import { asset } from '@/lib/asset';
 import { useAudioStore } from '@/store/useAudioStore';
 
 /**
@@ -9,6 +10,8 @@ type Name = 'swoosh-in' | 'swoosh-out' | 'ambient' | 'hover' | 'click';
 const NAMES: Name[] = ['swoosh-in', 'swoosh-out', 'ambient', 'hover', 'click'];
 const AMBIENT_LEVEL = 0.3; // a full song sits lower than the synth pad did
 const DEDUPE_MS = 2500;
+/** Files are fully decoded into memory, so refuse anything big (20 minutes of audio is ~200 MB of PCM). */
+const MAX_BYTES = 12 * 1024 * 1024;
 
 let ctx: AudioContext | null = null;
 let master: GainNode | null = null;
@@ -30,9 +33,14 @@ const loadFiles = (c: AudioContext) =>
   Promise.all(
     NAMES.map(async (n) => {
       try {
-        const res = await fetch(`/audio/${n}.mp3`);
+        const res = await fetch(asset(`/audio/${n}.mp3`));
         if (!res.ok || !(res.headers.get('content-type') ?? '').startsWith('audio')) return;
-        buffers[n] = await c.decodeAudioData(await res.arrayBuffer());
+        const data = await res.arrayBuffer();
+        if (data.byteLength > MAX_BYTES) {
+          console.warn(`/audio/${n}.mp3 is ${(data.byteLength / 1048576).toFixed(1)} MB; keep it under 12 MB. Using the synth fallback.`);
+          return;
+        }
+        buffers[n] = await c.decodeAudioData(data);
       } catch {
         /* no file or undecodable: synth fallback */
       }
@@ -145,8 +153,15 @@ const startAmbient = async () => {
     s.buffer = buffers.ambient;
     s.loop = true;
     s.connect(out);
-    s.start();
+    const t0 = c.currentTime;
+    s.start(t0);
     stops.push(() => s.stop());
+    // soften the loop seam: brief dip just before each wrap-around (scheduled ahead for ~40 loops)
+    const D = buffers.ambient.duration;
+    for (let k = 1; k <= 40; k++) {
+      out.gain.setTargetAtTime(0, t0 + k * D - 0.25, 0.06);
+      out.gain.setTargetAtTime(1, t0 + k * D, 0.12);
+    }
   } else {
     // synthesized pad: three detuned sines with a slow LFO on the level
     const pad = c.createGain();

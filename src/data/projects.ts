@@ -1,3 +1,5 @@
+import { asset } from '@/lib/asset';
+
 /** A labelled or plain bullet. Rendered as "Label: text" when a label is present. */
 export interface Item {
   label?: string;
@@ -35,7 +37,7 @@ export interface Project {
   links: { label: string; url: string }[];
 }
 
-const thumb = (slug: string) => `/assets/projects/${slug}.svg`;
+const thumb = (slug: string) => asset(`/assets/projects/${slug}.svg`);
 
 export const projects: Project[] = [
   {

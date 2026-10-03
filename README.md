@@ -24,3 +24,9 @@ npm run lint && npm run type-check
 - Audio is muted until `[SOUND ON]`. Sounds are synthesized by default (hover tick, click, enter/back whoosh, ambient pad, ambient ducks inside projects). To use your own, add `swoosh-in.mp3`, `swoosh-out.mp3`, `ambient.mp3`, `hover.mp3`, `click.mp3` to `public/audio/`; they're picked up automatically.
 - Video: set a project's `videoUrl` to an `.mp4` in `public/assets/projects/` to autoplay it on the wall tile and project page.
 - Swap the background music with the prompt in `docs/background-music-prompt.md` (file goes at `public/audio/ambient.mp3`).
+
+## Deploy (GitHub Pages)
+- The site is a static export (`output: 'export'`). `.github/workflows/deploy.yml` builds on every push to `main` with `NEXT_PUBLIC_BASE_PATH=/<repo name>` and publishes `out/`.
+- One-time: GitHub repo → Settings → Pages → Source: **GitHub Actions**. The site appears at `https://<user>.github.io/<repo>/`.
+- Local production check: `NEXT_PUBLIC_BASE_PATH=/portfolio npm run build`. Plain `npm run dev` uses no base path.
+- Music credit: fill in `docs/music-credits.md` and the line at the bottom of the About page.
