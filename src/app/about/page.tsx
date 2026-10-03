@@ -1,5 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
 import type { Metadata } from 'next';
-import AboutHero from '@/components/about/AboutHero';
 import Reveal, { GrowLine } from '@/components/about/Reveal';
 import WordReveal from '@/components/about/WordReveal';
 import { about, type Entry } from '@/data/about';
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 const Section = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <section className="grid gap-6 md:grid-cols-[minmax(0,3fr)_minmax(0,9fr)] md:gap-12">
     <Reveal>
-      <h2 className="micro text-mute md:sticky md:top-28">{label}</h2>
+      <h2 className="micro text-mute">{label}</h2>
     </Reveal>
     <div>{children}</div>
   </section>
@@ -52,16 +52,30 @@ const Timeline = ({ entries }: { entries: Entry[] }) => (
 
 export default function AboutPage() {
   return (
-    <section className="min-h-screen bg-ink px-4 pb-40 pt-24 md:px-8 md:pt-28">
-      <AboutHero src={asset('/assets/profile-wide.jpg')} alt={about.name} caption={about.name} />
+    <section className="min-h-screen bg-ink px-4 pb-40 pt-24 md:px-8 md:pt-32">
+      <div className="mx-auto max-w-6xl">
+        {/* compact header: small profile on the left, much smaller headline on the right */}
+        <div className="flex flex-col gap-6 md:flex-row md:items-start md:gap-12">
+          <Reveal className="shrink-0">
+            <img
+              src={asset('/assets/profile-small.jpg')}
+              alt={about.name}
+              width={400}
+              height={500}
+              fetchPriority="high"
+              className="aspect-[4/5] w-24 rounded-xl object-cover md:w-44"
+            />
+            <p className="micro mt-3 text-mute">{about.name}</p>
+          </Reveal>
+          <div className="min-w-0">
+            <WordReveal text={about.headline} className="max-w-3xl text-xl font-medium leading-snug tracking-tight md:text-3xl" />
+            <Reveal as="p" delay={0.1} className="mt-5 max-w-2xl text-base leading-relaxed text-paper/75 md:text-lg">
+              {about.paragraph}
+            </Reveal>
+          </div>
+        </div>
 
-      <div className="mx-auto mt-16 max-w-6xl md:mt-28">
-        <WordReveal text={about.headline} className="text-3xl font-medium leading-[1.12] tracking-tight md:text-6xl" />
-        <Reveal as="p" className="mt-8 max-w-2xl text-lg leading-relaxed text-paper/75 md:text-xl">
-          {about.paragraph}
-        </Reveal>
-
-        <div className="mt-24 space-y-24 md:mt-36 md:space-y-32">
+        <div className="mt-16 space-y-16 md:mt-24 md:space-y-24">
           <Section label="Work experience">
             <Timeline entries={about.work} />
           </Section>
@@ -86,7 +100,7 @@ export default function AboutPage() {
           </Section>
         </div>
 
-        <Reveal as="p" className="micro mt-28 text-mute">
+        <Reveal as="p" className="micro mt-20 text-mute">
           {/* TODO: replace with the real title, creator and source link (see docs/music-credits.md) */}
           Music: TODO title by TODO creator, used with credit.
         </Reveal>

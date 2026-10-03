@@ -35,4 +35,4 @@ npm run lint && npm run type-check
 - Images/diagrams on a project page: use `docs/add-project-image-prompt.md` (`galleryImages` + `galleryTitle`, click-to-zoom lightbox).
 - Swap the header logo with `docs/update-logo-prompt.md` (icon lives in `public/assets/brand/`).
 - Text on wall tiles and project cards: see `docs/project-card-text-prompt.md` (title + tagline + tags on the wall; plus a 3-line description on the Projects tab).
-- About page content and photo: edit `src/data/about.ts` or use `docs/about-page-prompt.md` (wide hero photo at `public/assets/profile-wide.jpg`, scroll animations in `src/components/about/`).
+- About page content and photo: edit `src/data/about.ts` or use `docs/about-page-prompt.md` (small profile photo at `public/assets/profile-small.jpg`, scroll animations in `src/components/about/`).
