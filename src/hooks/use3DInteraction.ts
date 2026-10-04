@@ -43,10 +43,10 @@ export function use3DInteraction(wall: React.RefObject<Group | null>, rig: React
       const dx = e.clientX - s.lastX;
       const dy = e.clientY - s.lastY;
       s.rotY -= dx * SENS;
-      s.panY = MathUtils.clamp(s.panY - dy * PAN, -maxPanY, maxPanY);
+      s.panY = MathUtils.clamp(s.panY + dy * PAN, -maxPanY, maxPanY); // wall.position.y = -panY, so dragging down moves the wall down
       // smoothed velocity (units / second) for inertia on release
       s.velY = MathUtils.lerp(s.velY, (-dx * SENS) / dt, 0.4);
-      s.velPan = MathUtils.lerp(s.velPan, (-dy * PAN) / dt, 0.4);
+      s.velPan = MathUtils.lerp(s.velPan, (dy * PAN) / dt, 0.4);
       s.lastX = e.clientX;
       s.lastY = e.clientY;
       s.lastT = now;
@@ -61,7 +61,7 @@ export function use3DInteraction(wall: React.RefObject<Group | null>, rig: React
       if (!enabled || useStore.getState().transitioning) return;
       e.preventDefault();
       s.velY += e.deltaX * 0.0012;
-      s.velPan += e.deltaY * 0.012;
+      s.velPan -= e.deltaY * 0.012; // scrolling down moves the wall up, like a page
     };
 
     el.style.cursor = 'grab';
@@ -97,10 +97,10 @@ export function use3DInteraction(wall: React.RefObject<Group | null>, rig: React
     w.rotation.y = s.rotY;
     w.position.y = -s.panY;
 
-    // cursor-follow tilt
+    // cursor-follow tilt: the view follows the cursor (cursor left -> camera looks left, so the wall slides right)
     const { x, y } = frame.pointer;
-    r.rotation.x = MathUtils.damp(r.rotation.x, y * 0.06, 4, delta);
-    r.rotation.y = MathUtils.damp(r.rotation.y, -x * 0.09, 4, delta);
-    r.rotation.z = MathUtils.damp(r.rotation.z, -x * 0.015, 4, delta);
+    r.rotation.x = MathUtils.damp(r.rotation.x, -y * 0.06, 4, delta);
+    r.rotation.y = MathUtils.damp(r.rotation.y, x * 0.09, 4, delta);
+    r.rotation.z = MathUtils.damp(r.rotation.z, x * 0.015, 4, delta);
   });
 }
