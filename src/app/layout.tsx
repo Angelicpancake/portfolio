@@ -7,6 +7,7 @@ import Navigation from '@/components/ui/Navigation';
 import FilterModal from '@/components/ui/FilterModal';
 import TransitionOverlay from '@/components/ui/TransitionOverlay';
 import AudioController from '@/components/ui/AudioController';
+import IntroScreen from '@/components/intro/IntroScreen';
 import SmoothScroll from '@/components/ui/SmoothScroll';
 
 const grotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-grotesk' });
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Navigation />
         <FilterModal />
         <TransitionOverlay />
+        <IntroScreen />
       </body>
     </html>
   );

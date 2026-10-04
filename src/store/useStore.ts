@@ -5,6 +5,9 @@ interface State {
   filterOpen: boolean;
   activeSlug: string | null;
   transitioning: boolean;
+  /** True once the entry screen has been dismissed (or skipped); the wall's entrance waits for it. */
+  introDone: boolean;
+  setIntroDone: (v: boolean) => void;
   hoverSlug: string | null;
   setHoverSlug: (slug: string | null) => void;
   toggleTag: (tag: string) => void;
@@ -19,6 +22,8 @@ export const useStore = create<State>((set) => ({
   filterOpen: false,
   activeSlug: null,
   transitioning: false,
+  introDone: false,
+  setIntroDone: (introDone) => set({ introDone }),
   hoverSlug: null,
   setHoverSlug: (hoverSlug) => set({ hoverSlug }),
   toggleTag: (tag) =>

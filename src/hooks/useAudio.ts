@@ -242,6 +242,14 @@ export const toggleMute = () => {
   if (!useAudioStore.getState().isMuted) sfx.click();
 };
 
+/** Called from a click (the entry screen buttons): unlocks audio and sets sound on/off in one gesture. */
+export const enableSound = (on: boolean) => {
+  unlock();
+  const store = useAudioStore.getState();
+  if (store.isMuted === on) store.toggleMute();
+  if (on) sfx.enter();
+};
+
 export function useAudio() {
   const isMuted = useAudioStore((s) => s.isMuted);
   const volume = useAudioStore((s) => s.volume);

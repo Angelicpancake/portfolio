@@ -37,3 +37,4 @@ npm run lint && npm run type-check
 - Text on wall tiles and project cards: see `docs/project-card-text-prompt.md` (title + tagline + tags on the wall; plus a 3-line description on the Projects tab).
 - About page content and photo: edit `src/data/about.ts` or use `docs/about-page-prompt.md` (small profile photo at `public/assets/profile-small.jpg`, scroll animations in `src/components/about/`).
 - Wall control directions (cursor tilt, drag, wheel): `docs/wall-controls-prompt.md`; verify with `node scripts/check-wall-directions.mjs`.
+- Entry screen (unlocks sound, then reveals the wall): `src/components/intro/IntroScreen.tsx`; prompt in `docs/intro-screen-prompt.md`. Put your own artwork in the rings via `INTRO_MARK_SRC`.

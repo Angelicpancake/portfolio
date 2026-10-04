@@ -75,6 +75,7 @@ export function ProjectCard3D({ project, angle, y, radius, visible, delay, onSel
   const hover = useRef(0);
   const hovered = useRef(false);
   const appear = useRef(0);
+  const sinceIntro = useRef(0);
   const [live, setLive] = useState(false);
   const liveRef = useRef(false);
   const tmpPos = useMemo(() => new Vector3(), []);
@@ -118,7 +119,9 @@ export function ProjectCard3D({ project, angle, y, radius, visible, delay, onSel
         setLive(want);
       }
     }
-    if (state.clock.elapsedTime > delay) appear.current = Math.min(1, appear.current + delta * 1.6);
+    // the staggered entrance starts when the entry screen opens, not when WebGL boots behind it
+    if (useStore.getState().introDone) sinceIntro.current += delta;
+    if (sinceIntro.current > delay) appear.current = Math.min(1, appear.current + delta * 1.6);
     const target = visible ? 1 : 0;
     const hoverTarget = hovered.current && visible ? 1 : 0;
     hover.current += (hoverTarget - hover.current) * Math.min(1, delta * 9);
