@@ -21,7 +21,9 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 const PANCAKES = [286, 254, 222]; // top-ellipse centre y of the stacked pancakes, bottom to top
 
 /** One pancake: golden side + lighter top face. */
-function Pancake({ cy, rx = 98, side = 30 }: { cy: number; rx?: number; side?: number }) {
+function Pancake({ cy }: { cy: number }) {
+  const rx = 98;
+  const side = 30;
   return (
     <g>
       <rect x={200 - rx - 2} y={cy} width={(rx + 2) * 2} height={side} rx={side / 2} fill="url(#pk-side)" stroke="#9a5d1a" strokeWidth="1.5" />
@@ -30,7 +32,7 @@ function Pancake({ cy, rx = 98, side = 30 }: { cy: number; rx?: number; side?: n
   );
 }
 
-/** Original pancake illustration: stack drops in, syrup drips, a pancake gets flipped, steam rises. */
+/** Original pancake illustration: the stack drops in, butter lands, syrup drips, steam rises. */
 function Mark({ reduce, leaving }: { reduce: boolean; leaving: boolean }) {
   if (INTRO_MARK_SRC) {
     return (
@@ -122,28 +124,6 @@ function Mark({ reduce, leaving }: { reduce: boolean; leaving: boolean }) {
         <path d="M184 208h30" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" transform="rotate(-6 200 212)" />
       </motion.g>
 
-      {/* the flip: a pancake is tossed above the stack, turns over, and comes back down */}
-      {!reduce && (
-        <motion.g
-          style={{ transformOrigin: '200px 150px' }}
-          initial={{ opacity: 0 }}
-          animate={{
-            opacity: 1,
-            y: [0, -34, -58, -34, 0, 0],
-            scaleY: [1, 0.25, -1, 0.25, 1, 1],
-            rotate: [0, -4, 0, 4, 0, 0],
-          }}
-          transition={{
-            opacity: { delay: 2.2, duration: 0.4 },
-            y: { delay: 2.2, duration: 2.6, times: [0, 0.18, 0.4, 0.62, 0.8, 1], ease: 'easeInOut', repeat: Infinity },
-            scaleY: { delay: 2.2, duration: 2.6, times: [0, 0.18, 0.4, 0.62, 0.8, 1], ease: 'easeInOut', repeat: Infinity },
-            rotate: { delay: 2.2, duration: 2.6, times: [0, 0.18, 0.4, 0.62, 0.8, 1], ease: 'easeInOut', repeat: Infinity },
-          }}
-        >
-          <Pancake cy={150} rx={74} side={16} />
-        </motion.g>
-      )}
-
       {/* steam */}
       {!reduce &&
         [140, 262].map((x, i) => (
@@ -163,28 +143,23 @@ function Mark({ reduce, leaving }: { reduce: boolean; leaving: boolean }) {
   );
 }
 
-/** Replaces the native cursor over the entry screen. Reads "click to enable sound" once ready. */
+/** A small label that follows the regular cursor. Reads "click to enable sound" once ready. */
 function CursorHint({ ready, hidden }: { ready: boolean; hidden: boolean }) {
-  const x = useMotionValue(-200);
-  const y = useMotionValue(-200);
+  const x = useMotionValue(-300);
+  const y = useMotionValue(-300);
   const sx = useSpring(x, { stiffness: 520, damping: 42, mass: 0.4 });
   const sy = useSpring(y, { stiffness: 520, damping: 42, mass: 0.4 });
   useEffect(() => {
     const move = (e: PointerEvent) => {
-      x.set(e.clientX);
-      y.set(e.clientY);
+      x.set(e.clientX + 18); // offset so the label never covers the arrow
+      y.set(e.clientY + 22);
     };
     window.addEventListener('pointermove', move);
     return () => window.removeEventListener('pointermove', move);
   }, [x, y]);
   return (
-    <motion.div
-      aria-hidden
-      className="pointer-events-none fixed left-0 top-0 z-[110] flex items-center gap-3"
-      style={{ x: sx, y: sy, opacity: hidden ? 0 : 1 }}
-    >
-      <span className={`-ml-2.5 -mt-2.5 block size-5 rounded-full border transition-colors ${ready ? 'border-accent bg-accent/25' : 'border-paper/50'}`} />
-      <span className="micro -mt-2.5 whitespace-nowrap rounded-full bg-paper px-3 py-1.5 text-ink">{ready ? 'Click to enable sound' : 'Loading'}</span>
+    <motion.div aria-hidden className="pointer-events-none fixed left-0 top-0 z-[110]" style={{ x: sx, y: sy, opacity: hidden ? 0 : 1 }}>
+      <span className="micro block whitespace-nowrap rounded-full bg-paper px-3 py-1.5 text-ink">{ready ? 'Click to enable sound' : 'Loading'}</span>
     </motion.div>
   );
 }
@@ -293,7 +268,7 @@ export default function IntroScreen() {
       role="dialog"
       aria-modal="true"
       aria-label="Welcome"
-      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-ink text-paper ${fine ? 'cursor-none' : ''}`}
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-ink text-paper"
       style={leaving && !reduce ? { WebkitMaskImage: mask, maskImage: mask } : undefined}
       animate={leaving && reduce ? { opacity: 0 } : { opacity: 1 }}
       transition={{ duration: 0.4 }}
@@ -306,7 +281,7 @@ export default function IntroScreen() {
         disabled={!ready}
         onClick={() => enter(true)}
         className="absolute inset-0 z-0 outline-none focus-visible:outline-2 focus-visible:-outline-offset-8 focus-visible:outline-accent"
-        style={{ cursor: 'inherit' }}
+        style={{ cursor: 'default' }}
       />
 
       <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between p-5 md:p-8">
