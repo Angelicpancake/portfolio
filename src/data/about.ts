@@ -9,11 +9,11 @@ export const about = {
   headline:
     'Computer engineering student at Purdue and co-founder of Daki Life, a semantic journaling app that turns your thoughts into a living knowledge graph.',
   paragraph:
-    'I work on neurotech at Elastro, a Harvard-affiliated startup, building spike-sorting pipelines for closed-loop deep brain stimulation.',
+    'I work as a data analyst and software engineer at Elastro, a Harvard-affiliated startup, building spike-sorting pipelines for closed-loop deep brain stimulation.',
   work: [
     {
       year: '2026',
-      title: 'Neuroengineering Intern, Elastro',
+      title: 'Data Analyst & SWE Intern, Elastro',
       description:
         'Built GPU spike-sorting pipelines on AWS for deep brain stimulation research, and developing a training model.',
     },
