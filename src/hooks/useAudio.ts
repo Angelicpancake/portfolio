@@ -77,6 +77,8 @@ const ensure = (): AudioContext | null => {
       else void startAmbient();
     }
   });
+  // sound defaults to on: start the ambient bed as soon as the (gesture-created) context exists
+  if (!useAudioStore.getState().isMuted) void startAmbient();
   return c;
 };
 

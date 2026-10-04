@@ -2,6 +2,9 @@
 import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { duck, sfx, unlock } from '@/hooks/useAudio';
+import { useAudioStore } from '@/store/useAudioStore';
+
+const SOUND_KEY = 'portfolio-sound';
 
 const isDetail = (path: string) => /^\/projects\/[^/]+/.test(path);
 
@@ -10,14 +13,32 @@ export default function AudioController() {
   const pathname = usePathname();
   const prev = useRef<string | null>(null);
 
+  // Browsers block audio until the first user gesture, so sound is "on" from the start but begins on first interaction.
   useEffect(() => {
-    const once = () => unlock();
-    window.addEventListener('pointerdown', once, { once: true });
-    window.addEventListener('keydown', once, { once: true });
-    return () => {
-      window.removeEventListener('pointerdown', once);
-      window.removeEventListener('keydown', once);
+    const events = ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown'] as const;
+    const unlockOnce = () => {
+      unlock();
+      events.forEach((e) => window.removeEventListener(e, unlockOnce, true));
     };
+    events.forEach((e) => window.addEventListener(e, unlockOnce, true));
+    return () => events.forEach((e) => window.removeEventListener(e, unlockOnce, true));
+  }, []);
+
+  // remember an explicit "off" so returning visitors aren't surprised; first-time visitors get sound on
+  useEffect(() => {
+    try {
+      if (localStorage.getItem(SOUND_KEY) === 'off') useAudioStore.setState({ isMuted: true });
+    } catch {
+      /* storage unavailable */
+    }
+    return useAudioStore.subscribe((s, prev) => {
+      if (s.isMuted === prev.isMuted) return;
+      try {
+        localStorage.setItem(SOUND_KEY, s.isMuted ? 'off' : 'on');
+      } catch {
+        /* storage unavailable */
+      }
+    });
   }, []);
 
   useEffect(() => {
